@@ -2,7 +2,6 @@ import requests
 import time
 import datetime as dt
 import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 import numpy as np
 
 # global variables
