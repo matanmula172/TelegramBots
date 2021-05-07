@@ -48,6 +48,25 @@ def send_message(msg):
     requests.get(url)
 
 
+def create_message(movie_instance, movie_links):
+    msg = str(movie_instance[0]) + ':\n'
+    msg += 'links:\n\n'
+    for link in movie_links['movie_results']:
+        msg += link['link'] + '\n'
+    suggestions = '\nSimilar search results:\n'
+    count = 1
+    while count < 6 and count < len(movie_instance):
+        if str(movie_instance[count]) != str(movie_instance[0]):
+            suggestions += str(movie_instance[count]) + '\n'
+            count += 1
+    if count > 1:
+        msg += suggestions
+    else:
+        msg += '\nNo similar search results'
+
+    return msg
+
+
 def main():
     last_title, chat_id = get_last_chat_id_and_text(get_updates())
     while True:
@@ -59,8 +78,8 @@ def main():
                 imdb_id = movie_module.get_movie_imdb_id(movie_instance[0])
                 link_lst = movie_module.get_link_list_movie(imdb_id)
                 if len(link_lst) > 0:
-                    for link in link_lst['movie_results']:
-                        send_message(str(link['link']))
+                    msg = create_message(movie_instance, link_lst)
+                    send_message(msg)
                 else:
                     send_message("No links for this movie")
             else:
